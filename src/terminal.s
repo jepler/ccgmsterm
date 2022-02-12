@@ -222,6 +222,8 @@ term_mainloop:
 ; charset switching
 	cpx #SHFLAG_SHIFT | SHFLAG_CBM
 	bne :+
+	bit is_80_columns
+	bmi :+
 	ldx MODE	; charset switching allowed?
 	bpl :+		; no
 	ldx #$17

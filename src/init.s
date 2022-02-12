@@ -42,9 +42,11 @@ start
 	lda #$37
 	sta $01
 
+.if 1
 	jsr col80_init
 	lda #$80
 	sta is_80_columns
+.endif
 
 	lda $0326
 	sta oldout
@@ -69,7 +71,8 @@ start
 	lda #$0e
 	sta $d418	; *almost* full volume
 
-.if 0
+	bit is_80_columns
+	bmi @skip
 ; clear secondary screens
 	lda #<SCREENS_BASE
 	sta locat
@@ -82,7 +85,7 @@ start
 	bne :-
 	inc locat+1
 	bne :-
-.endif
+@skip:
 
 	cli
 

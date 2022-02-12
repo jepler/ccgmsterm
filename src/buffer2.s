@@ -49,8 +49,7 @@ scnbf3
 	jsr buffer_put
 	lda #CLR
 	jsr buffer_put
-	lda $d018
-	and #2
+	jsr get_charset
 	lsr a
 	lsr a
 	ror a

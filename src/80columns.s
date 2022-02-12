@@ -4,7 +4,7 @@
 ; * Fast scrolling by Ilker Ficicilar
 ; * Reverse-engineered and improved by Michael Steil
 
-.export col80_init
+.export col80_init, col80_invert, col80_restore
 
 ; KERNAL defines
 R6510  = $01
@@ -881,24 +881,27 @@ new_cinv:
 	bne @2
 	dec BLNCT
 	bne @2
+
+; cursor blinking
 	lda #30
 	sta BLNCT
-	ldy PNTR
-	lsr BLNON
-	ldx GDCOL
-	lda (PNT),y
+	ldy PNTR	; current line
+	lsr BLNON	; blink state
+	ldx GDCOL	; color of char under cursor
+	lda (PNT),y	; read char
 	bcs @1
-	inc BLNON
-	sta GDBLN
-	lda PNTR
+	inc BLNON	; invert blink state
+	sta GDBLN	; save char under cursor
+	lda PNTR	; current line
 	lsr a
 	tay
-	lda (USER),y
-	sta GDCOL
-	ldx COLOR
-	lda GDBLN
-@1:	eor #$80
+	lda (USER),y	; get color of cell
+	sta GDCOL	; save
+	ldx COLOR	; cursor color
+	lda GDBLN	; char
+@1:	eor #$80	; invert
 	jsr _draw_char_with_col
+
 @2:	lda bgcolor
 	cmp color2
 	beq @5
@@ -962,6 +965,35 @@ new_cinv:
 	jsr calc_pnt
 	jsr calc_user
 @a6:	jmp $EA61
+
+col80_invert:
+; cursor blinking
+	php
+	sei
+	lda R6510
+	pha
+	lda #0
+	sta R6510
+	ldy PNTR	; current line
+	lda (PNT),y	; read char
+	eor #$80	; invert
+col80_draw:
+	ldx GDCOL	; color of char under cursor
+	jsr _draw_char_with_col
+	pla
+	sta R6510
+	plp
+	rts
+col80_restore:
+	php
+	sei
+	lda R6510
+	pha
+	lda #0
+	sta R6510
+	ldy PNTR	; current line
+	lda (PNT),y	; read char
+	jmp col80_draw
 
 .if USE_REU
 reu_op:

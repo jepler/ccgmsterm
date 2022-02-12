@@ -35,8 +35,7 @@ outstr:
 	bcc @outst3
 	cmp #'Z'+1+$80
 	bcs @outst3
-	lda $d018
-	and #2
+	jsr get_charset
 	php
 	lda (zpoutstr),y
 	plp
@@ -60,8 +59,7 @@ outstr:
 	jsr chrout
 	lda #$a1	; '▌' LEFT HALF BLOCK
 	jsr chrout
-	lda $d018
-	and #2
+	jsr get_charset
 	php
 	iny
 	lda (zpoutstr),y
@@ -82,11 +80,20 @@ outcap:
 	cmp #'Z'+1+$80
 	bcs @2
 	pha
-	lda $d018
-	and #2
+	jsr get_charset
 	beq @1
 	pla
 	bne @2
 @1:	pla
 	and #$7f
 @2:	jmp chrout
+
+;----------------------------------------------------------------------
+get_charset:
+	lda is_80_columns
+	beq :+
+	lda #2
+	rts
+:	lda $d018
+	and #2
+	rts
