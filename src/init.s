@@ -42,7 +42,7 @@ start
 	lda #$37
 	sta $01
 
-	jsr col80_init
+;	jsr col80_init
 
 	lda $0326
 	sta oldout

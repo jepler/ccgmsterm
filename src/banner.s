@@ -75,11 +75,11 @@ txt_banner:
 	.byte PURPLE
 	.byte " ! "
 	.byte WHITE
-	.byte "     Terminal 2021   "
+	.byte " Terminal FUTURE ",VERSION," "
 	.byte 0
 
 txt_author:
-	.byte "by Craig Smith       Mods by Alwyz   "
+	.byte "by Craig Smith, Alwyz, Michael Steil "
 	.byte RVSOFF,DKGRAY,0
 
 txt_banner1:
