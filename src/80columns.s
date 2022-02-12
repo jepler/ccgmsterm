@@ -137,6 +137,8 @@ col80_init:
 	lda #$37
 	sta $01
 	plp
+	lda #0
+	sta $d021
 
 	sec
 	jsr MODE_enable_i ; allow switching charsets, returns A=#$00
