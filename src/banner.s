@@ -21,6 +21,9 @@ print_banner:
 	lda #<txt_author
 	ldy #>txt_author
 	jsr outstr
+	ldx #80
+	bit is_80_columns
+	bmi :+
 	ldx #40
 :	lda #$b7	; UPPER ONE QUARTER BLOCK
 	jsr chrout

@@ -178,9 +178,7 @@ new_irq:
 	stx outstat
 @1:	bcc @end
 @2:	cli
-	jsr $ffea	; update jiffy clock
-	jsr $ea87	; (jmp) - scan keyboard
-@end:	jmp $ea81
+@end:	jmp (oldirq)
 
 ilotab:
 	.byte $95
@@ -355,9 +353,9 @@ up9600_disable:
 	sta $0318
 	lda #>oldnmi
 	sta $0319
-	lda #<oldirq
+	lda oldirq
 	sta $0314	; irq
-	lda #>oldirq
+	lda oldirq+1
 	sta $0315	; irq
 	cli
 	rts

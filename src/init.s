@@ -42,12 +42,18 @@ start
 	lda #$37
 	sta $01
 
-;	jsr col80_init
+	jsr col80_init
+	lda #$80
+	sta is_80_columns
 
 	lda $0326
 	sta oldout
 	lda $0327
 	sta oldout+1
+	lda $0314
+	sta oldirq
+	lda $0315
+	sta oldirq+1
 
 ; editor/screen setup
 	lda #1
@@ -189,6 +195,11 @@ init
 
 @noload=term_entry_first	; [XXX]
 
+is_80_columns:
+	.byte 0
 oldout:
 	.word 0
+oldirq:
+	.word 0
 .assert <oldout <> $ff, error, "JMP () bug"
+.assert <oldirq <> $ff, error, "JMP () bug"

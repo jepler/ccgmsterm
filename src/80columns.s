@@ -418,6 +418,7 @@ move_csr_right:
 
 cmd_text:
 cmd_graphics:
+.if 0
 	asl
 	lda $D018
 	and #<~2
@@ -425,6 +426,7 @@ cmd_graphics:
 	ora #2
 store_d018:
 	sta $D018
+.endif
 	rts
 
 set_rvs_on:

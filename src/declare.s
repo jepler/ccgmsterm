@@ -137,7 +137,6 @@ return	= $febc
 oldchk	= $f21b
 ochrin	= $f157
 ogetin	= $f13e
-oldirq	= $ea31
 oldnmi	= $fe47
 findfn	= $f30f
 devnum	= $f31f
