@@ -43,10 +43,10 @@ charset_ptr = $DF
 tmp_ptr     = $E1
 
 ; addresses
-VICSCN = $C000 ; NEW Video Matrix: 25 Lines X 80 Columns
-VICCOL = $D800 ; new color RAM is in RAM at the same address
-BITMAP = $E000
-CHARSET = $D000
+CHARSET	= $D000 ; $D000-$D3FF
+VICCOL	= $D400 ; $D400-$D7FF
+VICSCN	= $D800 ; NEW Video Matrix: 25 Lines X 80 Columns
+BITMAP	= $E000
 
 .ifndef USE_REU
 USE_REU = 0
@@ -120,9 +120,9 @@ col80_init:
 	sta $02
 	lda #>charset
 	sta $03
-	lda #<$d000
+	lda #<CHARSET
 	sta $04
-	lda #>$d000
+	lda #>CHARSET
 	sta $05
 	ldx #8
 	ldy #0
@@ -147,7 +147,7 @@ col80_init:
 	jsr cmd_clr ; clear screen
 	lda #$3B ; bitmap mode
 	sta $D011
-	lda #$68
+	lda #$58
 	sta $D018
 	lda #$90 ; VIC bank $C000-$FFFF, bit 7 is important for cmd_graphics
 	sta $DD00
