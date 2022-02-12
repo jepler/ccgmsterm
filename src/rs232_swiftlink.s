@@ -164,7 +164,7 @@ newout:
 	cmp #2		; screen, and...
 	beq :+
 	pla		; if so, go back to original rom routines
-	jmp oldout
+	jmp (oldout)
 :    	pla
 
 	sta rsotm

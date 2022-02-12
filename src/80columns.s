@@ -4,6 +4,8 @@
 ; * Fast scrolling by Ilker Ficicilar
 ; * Reverse-engineered and improved by Michael Steil
 
+.export col80_init
+
 ; KERNAL defines
 R6510  = $01
 DFLTN  = $99   ; Default Input Device (0)
@@ -44,6 +46,7 @@ tmp_ptr     = $E1
 VICSCN = $C000 ; NEW Video Matrix: 25 Lines X 80 Columns
 VICCOL = $D800 ; new color RAM is in RAM at the same address
 BITMAP = $E000
+CHARSET = $D000
 
 .ifndef USE_REU
 USE_REU = 0
@@ -106,9 +109,35 @@ LINES   = 25
 
 .import charset
 
-.segment "CODE"
+;.segment "CODE"
 
-start:
+col80_init:
+	php
+	sei
+	lda #$30
+	sta $01
+	lda #<charset
+	sta $02
+	lda #>charset
+	sta $03
+	lda #<$d000
+	sta $04
+	lda #>$d000
+	sta $05
+	ldx #8
+	ldy #0
+:	lda ($02),y
+	sta ($04),y
+	iny
+	bne :-
+	inc $03
+	inc $05
+	dex
+	bne :-
+	lda #$37
+	sta $01
+	plp
+
 	sec
 	jsr MODE_enable_i ; allow switching charsets, returns A=#$00
 	sta QTSW
@@ -143,7 +172,7 @@ start:
 	ora COLOR
 	sta COLOR
 	cli
-	jmp ($A000) ; BASIC cold start
+	rts
 
 new_bsout:
 	sta DATA
@@ -680,7 +709,7 @@ draw_char:
 	beq @2
 	sec
 @2:	sta charset_ptr
-	lda #(>charset) >> 3
+	lda #(>CHARSET) >> 3
 	rol
 	asl charset_ptr
 	rol

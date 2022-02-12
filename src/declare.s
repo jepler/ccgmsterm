@@ -134,7 +134,6 @@ ciout	= $ffa8
 rstkey	= $fe56
 norest	= $fe72
 return	= $febc
-oldout	= $f1ca
 oldchk	= $f21b
 ochrin	= $f157
 ogetin	= $f13e

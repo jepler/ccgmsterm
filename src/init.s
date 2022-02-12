@@ -6,6 +6,8 @@
 ; Initialization
 ;
 
+.import col80_init
+
 ; PAL/NTSC detection
 start
 @1:	lda $d012
@@ -30,6 +32,7 @@ start
 
 ; system setup
 	jsr $e3bf	; refresh basic reset - mostly an easyflash fix
+
 	sei
 	cld
 	ldx #$ff
@@ -38,6 +41,13 @@ start
 	sta $00
 	lda #$37
 	sta $01
+
+	jsr col80_init
+
+	lda $0326
+	sta oldout
+	lda $0327
+	sta oldout+1
 
 ; editor/screen setup
 	lda #1
@@ -53,6 +63,7 @@ start
 	lda #$0e
 	sta $d418	; *almost* full volume
 
+.if 0
 ; clear secondary screens
 	lda #<SCREENS_BASE
 	sta locat
@@ -65,6 +76,7 @@ start
 	bne :-
 	inc locat+1
 	bne :-
+.endif
 
 	cli
 
@@ -176,3 +188,7 @@ init
 	jmp term_entry_first
 
 @noload=term_entry_first	; [XXX]
+
+oldout:
+	.word 0
+.assert <oldout <> $ff, error, "JMP () bug"
