@@ -8,7 +8,7 @@
 
 SET_PETSCII
 txt_instructions1:
-	.byte CLR,10,LTGRAY,15,LOCASE,RED,"   C",ORANGE,"C",YELLOW,"G",GREEN,"M",BLUE,"S",PURPLE,"! ",WHITE,"Term FUTURE",VERSION,CR,CR
+	.byte CLR,10,LTGRAY,15,LOCASE,RED,"   C",ORANGE,"C",YELLOW,"G",GREEN,"M",BLUE,"S",PURPLE,"! ",WHITE,"Term FUTURE ",VERSION,CR,CR
 	.byte RVSON,YELLOW,"Commands:",RVSOFF,CR,CR
 	.byte BLUE,"C",RED,"=   ",WHITE,"STOP      ",CYAN,"Disconnect.",LTBLUE," (Drop DTR)",CR
 	.byte WHITE,"CTRL J/K       ",LTGREEN,"Dest/Non Dest Cursor",CR
