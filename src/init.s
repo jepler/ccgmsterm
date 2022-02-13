@@ -281,4 +281,4 @@ ramirq2:
 	sta $01
 	pla
 	rti
-.segment "S1000"
+.segment "CCGMS"

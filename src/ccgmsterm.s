@@ -15,33 +15,22 @@
 	.include "declare.s"
 	.include "encoding.s"
 
-.segment "S07FF"
+.segment "HEADER"
 
 	.word $0801
-
-.segment "S0801"
-
 	.word entry
 	.word 10
-	.byte $9e,"4096"
+	.byte $9e,"2061"
 	.word 0
 	.byte 0
+
+.segment "CCGMS"
 
 entry:
 	jmp start
 
-.segment "S0812"
-
 	.include "punter.s"
 	.include "misc2.s"
-
-easyflash_support:
-	.byte EASYFLASH
-
-;about 40 bytes still free here to play with before $1000
-
-.segment "S1000"
-
 	.include "init.s"
 	.include "terminal.s"
 	.include "sound.s"
@@ -73,14 +62,11 @@ easyflash_support:
 	.include "reu.s"
 	.include "theme.s"
 	.include "easyflash.s"
-
-.segment "S5100"
-
 	.include "config.s"
-
-.segment "S5C00"
-
 	.include "instr.s"
 
+easyflash_support:
+	.byte EASYFLASH
+
 .segment "END"
-endprg	.byte 0
+endprg:
