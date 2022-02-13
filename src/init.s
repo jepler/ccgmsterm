@@ -6,7 +6,7 @@
 ; Initialization
 ;
 
-.import col80_init
+.import col80_init, bgcolor
 
 ; PAL/NTSC detection
 start
@@ -198,6 +198,7 @@ init
 
 @noload=term_entry_first	; [XXX]
 
+;----------------------------------------------------------------------
 is_80_columns:
 	.byte 0
 oldout:
@@ -206,3 +207,23 @@ oldirq:
 	.word 0
 .assert <oldout <> $ff, error, "JMP () bug"
 .assert <oldirq <> $ff, error, "JMP () bug"
+
+;----------------------------------------------------------------------
+get_charset:
+	lda is_80_columns
+	beq :+
+	lda #2
+	rts
+:	lda $d018
+	and #2
+	rts
+
+;----------------------------------------------------------------------
+set_bgcolor:
+	sta $d020
+	asl
+	asl
+	asl
+	asl
+	sta bgcolor
+	rts

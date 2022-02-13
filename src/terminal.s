@@ -122,10 +122,10 @@ term_mainloop:
 	bcc @no5
 	cmp #140+1	; > F8
 	bcs @no5
-	ldx #0
-	stx $d020
-	stx $d021
 	pha
+	lda #0
+	sta $d020
+	jsr set_bgcolor
 	jsr cursor_off
 	pla
 	sec
@@ -312,9 +312,11 @@ handle_control_codes:
 	cmp #$0e	; ctrl-n: reset background to black
 	bne @3
 
-	ldx #0
-	stx $d020
-	stx $d021
+	pha
+	lda #0
+	sta $d020
+	jsr set_bgcolor
+	pla
 
 @3:
 	cmp #$07	; ctrl-g: bell sound from bbs side
@@ -362,8 +364,9 @@ handle_control_codes:
 	dex
 	bpl :-
 	bmi @9
-:	stx $d020
-	stx $d021
+:	txa
+	sta $d020
+	jsr set_bgcolor
 	lda #$10	; ctrl-p: non printable
 @9:
 	sta prev_char

@@ -69,7 +69,7 @@ edtmen
 	jsr chrout
 	lda #0
 	sta $d020
-	sta $d021
+	jsr set_bgcolor
 edtstr
 	jsr prwcmc
 	lda #<txt_edit
@@ -245,8 +245,9 @@ edtde6
 	tya
 	tax
 edtclb
-	stx $d020
-	stx $d021
+	txa
+	sta $d020
+	jsr set_bgcolor
 	jmp edtdla
 edtclh
 	lda #0

@@ -87,13 +87,3 @@ outcap:
 @1:	pla
 	and #$7f
 @2:	jmp chrout
-
-;----------------------------------------------------------------------
-get_charset:
-	lda is_80_columns
-	beq :+
-	lda #2
-	rts
-:	lda $d018
-	and #2
-	rts

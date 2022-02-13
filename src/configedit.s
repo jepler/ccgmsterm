@@ -12,7 +12,7 @@ handle_f7_config:
 	jsr disablemodem
 	lda #0
 	sta $d020
-	sta $d021
+	jsr set_bgcolor
 	lda #<txt_settings_menu
 	ldy #>txt_settings_menu
 	jsr outstr

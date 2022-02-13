@@ -5,6 +5,7 @@
 ; * Reverse-engineered and improved by Michael Steil
 
 .export col80_init, col80_invert, col80_restore
+.export bgcolor
 
 ; KERNAL defines
 R6510  = $01
@@ -138,7 +139,7 @@ col80_init:
 	sta $01
 	plp
 	lda #0
-	sta $d021
+	sta bgcolor
 
 	sec
 	jsr MODE_enable_i ; allow switching charsets, returns A=#$00
@@ -165,6 +166,7 @@ col80_init:
 	sta IBSOUT
 	lda #>new_bsout
 	sta IBSOUT + 1
+.if 0
 	lda $D021
 	asl
 	asl
@@ -173,6 +175,7 @@ col80_init:
 	sta bgcolor
 	ora COLOR
 	sta COLOR
+.endif
 	cli
 	rts
 
@@ -867,12 +870,14 @@ new_basin:
 
 new_cinv:
 	jsr $FFEA ; increment real time clock
+.if 0
 	lda $D021
 	asl
 	asl
 	asl
 	asl
 	sta bgcolor
+.endif
 	lda R6510
 	pha
 	lda #0
