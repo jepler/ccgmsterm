@@ -31,10 +31,7 @@ swap_screen:
 	pha
 	lda #$0b
 	sta $d011	; screen off
-	lda #<ramnmi
-	sta $fffa
-	lda #>ramnmi
-	sta $fffb
+	jsr setup_ram_nmi
 	lda #$2f
 	sta $00
 	lda #$35	; disable ROMs
@@ -55,27 +52,33 @@ scrtg2
 	sta $01		; enable ROMs
 	cli
 	jmp term_mainloop
-ramnmi
-	sta tempch
+
+setup_ram_nmi:
+	lda #<ramnmi
+	sta $fffa
+	lda #>ramnmi
+	sta $fffb
+	rts
+
+ramnmi:
+	pha
+	lda $01
+	pha
 	lda #$37
 	sta $01		; enable ROMs
-	plp
-	php
-	sta tempcl
 	lda #>ramnm2
 	pha
 	lda #<ramnm2
 	pha
-	lda tempcl
-	pha
+	pha		; P
 	lda tempch
 	jmp $fe43
-ramnm2
-	pha
-	lda #$35
+ramnm2:
+	pla
 	sta $01		; enable ROMs
 	pla
 	rti
+
 scrnl1
 	ldx tmp04	; SHFLAG
 	cpx #SHFLAG_SHIFT | SHFLAG_CTRL

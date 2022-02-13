@@ -47,6 +47,7 @@ start
 	lda #$80
 	sta is_80_columns
 .endif
+	jsr setup_ram_nmi
 
 	lda $0326
 	sta oldout
@@ -170,7 +171,8 @@ init
 	sta cursor_flag	; non-destructive
 	lda #0
 	sta $9d		; suppress all KERNAL messages
-	sta ascii_mode	; PETSCII mode
+	lda #1
+	sta ascii_mode	; ASCII mode
 	;sta allcap     ; upper/lower
 	sta buffer_open
 	sta half_duplex	; full duplex
