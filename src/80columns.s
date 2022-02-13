@@ -868,6 +868,20 @@ new_basin:
 @2:	jmp $F173 ; part of BASIN
 ; ***END*** almost identical to $F157 in KERNAL
 
+.macro ENABLE_RAM
+	php
+	lda R6510
+	pha
+	lda #0
+	sei
+	sta R6510
+.endmacro
+.macro DISABLE_RAM
+	pla
+	sta R6510
+	plp
+.endmacro
+
 new_cinv:
 	jsr $FFEA ; increment real time clock
 .if 0
@@ -878,10 +892,7 @@ new_cinv:
 	asl
 	sta bgcolor
 .endif
-	lda R6510
-	pha
-	lda #0
-	sta R6510
+	ENABLE_RAM
 	lda BLNSW
 	bne @2
 	dec BLNCT
@@ -936,8 +947,7 @@ new_cinv:
 	pla
 	sta TBLX
 	jsr calc_user
-@5:	pla
-	sta R6510
+@5:	DISABLE_RAM
 	lda $D018
 	and #2
 	cmp is_text

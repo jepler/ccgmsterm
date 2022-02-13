@@ -12,7 +12,7 @@
 config_data:
 
 baud_rate:
-	.byte BAUD_2400
+	.byte BAUD_9600
 
 ; indicates whether dialing should use ATD, followed by a quote
 firmware_zimmers:
@@ -22,7 +22,7 @@ mopo2:
 	.byte $20	; unused, but needs to stay for bin compat
 
 modem_type:
-	.byte MODEM_TYPE_USERPORT
+	.byte MODEM_TYPE_SWIFTLINK_DE
 
 ;----------------------------------------------------------------------
 ; Phone book
