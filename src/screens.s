@@ -53,32 +53,6 @@ scrtg2
 	cli
 	jmp term_mainloop
 
-setup_ram_nmi:
-	lda #<ramnmi
-	sta $fffa
-	lda #>ramnmi
-	sta $fffb
-	rts
-
-ramnmi:
-	pha
-	lda $01
-	pha
-	lda #$37
-	sta $01		; enable ROMs
-	lda #>ramnm2
-	pha
-	lda #<ramnm2
-	pha
-	pha		; P
-	lda tempch
-	jmp $fe43
-ramnm2:
-	pla
-	sta $01		; enable ROMs
-	pla
-	rti
-
 scrnl1
 	ldx tmp04	; SHFLAG
 	cpx #SHFLAG_SHIFT | SHFLAG_CTRL

@@ -82,4 +82,5 @@ easyflash_support:
 
 	.include "instr.s"
 
+.segment "END"
 endprg	.byte 0

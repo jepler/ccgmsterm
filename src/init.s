@@ -196,10 +196,11 @@ init
 	jsr setlfs
 	jsr load_config_file
 
+@noload:
 	jmp term_entry_first
 
-@noload=term_entry_first	; [XXX]
-
+;----------------------------------------------------------------------
+.segment "CODE"
 ;----------------------------------------------------------------------
 is_80_columns:
 	.byte 0
@@ -229,3 +230,55 @@ set_bgcolor:
 	asl
 	sta bgcolor
 	rts
+
+;----------------------------------------------------------------------
+setup_ram_nmi:
+	lda #<ramnmi
+	sta $fffa
+	lda #>ramnmi
+	sta $fffb
+;	lda #<ramirq
+;	sta $fffe
+;	lda #>ramirq
+;	sta $ffff
+	rts
+
+;----------------------------------------------------------------------
+ramnmi:
+	pha
+	lda $01
+	pha
+	lda #$37
+	sta $01
+	lda #>ramnm2
+	pha
+	lda #<ramnm2
+	pha
+	pha		; P
+	lda tempch
+	jmp $fe43
+ramnm2:
+	pla
+	sta $01
+	pla
+	rti
+
+ramirq:
+	pha
+	lda $01
+	pha
+	lda #$37
+	sta $01
+	lda #>ramirq2
+	pha
+	lda #<ramirq2
+	pha
+	pha		; P
+	lda tempch
+	jmp $ff48
+ramirq2:
+	pla
+	sta $01
+	pla
+	rti
+.segment "S1000"
