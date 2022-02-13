@@ -239,9 +239,9 @@ op1txt:
 op2txt:
 	.byte "User Port 300-2400"
 	.byte "UP9600 / EZ232    "
-	.byte "Swift / Turbo DE  "
-	.byte "Swift / Turbo DF  "
-	.byte "Swift / Turbo D7  "
+	.byte "SwiftLink/DE00/NMI"
+	.byte "SwiftLink/DF00/NMI"
+	.byte "SwiftLink/D700/NMI"
 
 op6txt:
 	.byte "Standard"
