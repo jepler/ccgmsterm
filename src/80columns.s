@@ -988,6 +988,7 @@ col80_invert:
 	ENABLE_RAM
 	ldy PNTR	; current line
 	lda (PNT),y	; read char
+	sta GDBLN
 	eor #$80	; invert
 col80_draw:
 	ldx GDCOL	; color of char under cursor
@@ -996,8 +997,7 @@ col80_draw:
 	rts
 col80_restore:
 	ENABLE_RAM
-	ldy PNTR	; current line
-	lda (PNT),y	; read char
+	lda GDBLN
 	jmp col80_draw
 
 .if USE_REU

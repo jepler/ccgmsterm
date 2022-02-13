@@ -62,7 +62,7 @@ ascii_to_petscii:
 	jeq ansi_end
 	cmp #'H'
 	bne :+
-@xxx:	lda #0
+	lda #0
 	sta ansi_escape_mode
 	lda #$13
 	jmp ansi_return
