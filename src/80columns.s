@@ -67,9 +67,11 @@ REU_TRIGGER     = $FF00                 ; REU command trigger
 OP_COPYFROM     = $ED
 OP_COPYTO       = $EC
 .macro REU_OP addr, len, op
+	php
         lda R6510
         pha
-        lda #%00110101
+        lda #$35
+	sei
         sta R6510
         lda #0
         sta $DF0A ; hold neither address
@@ -88,7 +90,7 @@ OP_COPYTO       = $EC
         jsr reu_op
         pla
         sta R6510
-
+	plp
 .endmacro
 
 .macro REU_COPYFROM addr, len
@@ -983,29 +985,17 @@ new_cinv:
 
 col80_invert:
 ; cursor blinking
-	php
-	sei
-	lda R6510
-	pha
-	lda #0
-	sta R6510
+	ENABLE_RAM
 	ldy PNTR	; current line
 	lda (PNT),y	; read char
 	eor #$80	; invert
 col80_draw:
 	ldx GDCOL	; color of char under cursor
 	jsr _draw_char_with_col
-	pla
-	sta R6510
-	plp
+	DISABLE_RAM
 	rts
 col80_restore:
-	php
-	sei
-	lda R6510
-	pha
-	lda #0
-	sta R6510
+	ENABLE_RAM
 	ldy PNTR	; current line
 	lda (PNT),y	; read char
 	jmp col80_draw
@@ -1031,16 +1021,12 @@ reu_op:
 .ifnblank save_y
 	tay
 .endif
-	lda R6510
-	pha
-	lda #0
-	sta R6510
+	ENABLE_RAM
 .ifnblank save_y
 	tya
 .endif
 	jsr addr
-	pla
-	sta R6510
+	DISABLE_RAM
 	plp
 	rts
 .endmacro
