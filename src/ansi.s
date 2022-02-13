@@ -32,7 +32,7 @@ ascii_to_petscii:
 
 ; in ANSI escape mode
 	cmp #2		; is ansi color code on?
-	beq coloron2
+	jeq coloron2
 
 	pla
 	cmp #'2'
@@ -57,12 +57,16 @@ ascii_to_petscii:
 :	cmp #'m'
 	beq @end
 	cmp #'J'
-	beq ansi_end
+	jeq ansi_end
 	cmp #'j'
-	beq ansi_end
+	jeq ansi_end
 	cmp #'H'
-	beq ansi_end
-	cmp #'h'
+	bne :+
+@xxx:	lda #0
+	sta ansi_escape_mode
+	lda #$13
+	jmp ansi_return
+:	cmp #'h'
 	beq ansi_end
 	cmp #']'
 	beq ansi_return_0
@@ -183,6 +187,11 @@ plain_char:
 	beq ansi_return
 	cmp #CR
 	beq ansi_return
+;	cmp #10
+;	bne :+
+;	lda #13
+;	jmp ansi_return
+;:
 	cmp #DEL
 	beq ansi_return	; [XXX]
 	bne ansi_return_0b

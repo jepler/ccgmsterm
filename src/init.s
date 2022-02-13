@@ -172,7 +172,7 @@ init
 	lda #0
 	sta $9d		; suppress all KERNAL messages
 	lda #1
-	sta ascii_mode	; ASCII mode
+	sta ascii_mode
 	;sta allcap     ; upper/lower
 	sta buffer_open
 	sta half_duplex	; full duplex
