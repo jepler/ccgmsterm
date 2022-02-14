@@ -6,10 +6,11 @@
 ; Initialization
 ;
 
-.import col80_init, bgcolor
+.import col80_init, col80_on, col80_off
+.import col80_enabled, bgcolor
 
 ; PAL/NTSC detection
-start
+start:
 @1:	lda $d012
 @2:	cmp $d012
 	beq @2
@@ -44,8 +45,7 @@ start
 
 .if 1
 	jsr col80_init
-	lda #$80
-	sta is_80_columns
+	jsr col80_on
 .endif
 	jsr setup_ram_nmi
 
@@ -72,7 +72,7 @@ start
 	lda #$0e
 	sta $d418	; *almost* full volume
 
-	bit is_80_columns
+	bit col80_enabled
 	bmi @skip
 ; clear secondary screens
 	lda #<SCREENS_BASE
@@ -166,7 +166,7 @@ ercopn:
 :	rts
 
 ;----------------------------------------------------------------------
-init
+init:
 	lda #1
 	sta cursor_flag	; non-destructive
 	lda #0
@@ -176,7 +176,8 @@ init
 	;sta allcap     ; upper/lower
 	sta buffer_open
 	sta half_duplex	; full duplex
-	jsr $e544	; clear screen
+	lda #$93
+	jsr chrout	; clear screen
 	lda config_file_loaded; already loaded config file?
 	bne @noload
 	lda drive_present
@@ -202,7 +203,7 @@ init
 ;----------------------------------------------------------------------
 .segment "CODE"
 ;----------------------------------------------------------------------
-is_80_columns:
+is_80_columns_enabled:
 	.byte 0
 oldout:
 	.word 0
@@ -212,8 +213,15 @@ oldirq:
 .assert <oldirq <> $ff, error, "JMP () bug"
 
 ;----------------------------------------------------------------------
+switch80:
+	rts
+
+switch40:
+	rts
+
+;----------------------------------------------------------------------
 get_charset:
-	lda is_80_columns
+	lda col80_enabled
 	beq :+
 	lda #2
 	rts

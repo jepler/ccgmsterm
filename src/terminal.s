@@ -222,7 +222,7 @@ term_mainloop:
 ; charset switching
 	cpx #SHFLAG_SHIFT | SHFLAG_CBM
 	bne :+
-	bit is_80_columns
+	bit col80_enabled
 	bmi :+
 	ldx MODE	; charset switching allowed?
 	bpl :+		; no

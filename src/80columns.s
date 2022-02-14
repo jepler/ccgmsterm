@@ -4,8 +4,9 @@
 ; * Fast scrolling by Ilker Ficicilar
 ; * Reverse-engineered and improved by Michael Steil
 
-.export col80_init, col80_invert, col80_restore
-.export bgcolor
+.export col80_init, col80_on, col80_off
+.export col80_invert, col80_restore
+.export col80_enabled, bgcolor
 
 ; KERNAL defines
 R6510  = $01
@@ -115,6 +116,7 @@ LINES   = 25
 ;.segment "CODE"
 
 col80_init:
+	; install charset
 	php
 	sei
 	lda #$30
@@ -140,21 +142,7 @@ col80_init:
 	lda #$37
 	sta $01
 	plp
-	lda #0
-	sta bgcolor
 
-	sec
-	jsr MODE_enable_i ; allow switching charsets, returns A=#$00
-	sta QTSW
-	sta INSRT ; disable quote and insert mode
-	jsr cmd_clr ; clear screen
-	lda #$3B ; bitmap mode
-	sta $D011
-	lda #$58
-	sta $D018
-	lda #$90 ; VIC bank $C000-$FFFF, bit 7 is important for cmd_graphics
-	sta $DD00
-	jsr cmd_graphics ; upper case
 	sei
 	lda #<new_cinv
 	sta CINV
@@ -177,11 +165,47 @@ col80_init:
 	sta bgcolor
 	ora COLOR
 	sta COLOR
+.else
+	lda #0
+	sta bgcolor
 .endif
 	cli
+
+	rts
+
+col80_on:
+	sec
+	jsr MODE_enable_i ; allow switching charsets, returns A=#$00
+	sta QTSW
+	sta INSRT ; disable quote and insert mode
+	jsr cmd_clr ; clear screen
+	lda #$3B ; bitmap mode
+	sta $D011
+	lda #$58
+	sta $D018
+	lda #$90 ; VIC bank $C000-$FFFF, bit 7 is important for cmd_graphics
+	sta $DD00
+	jsr cmd_graphics ; upper case
+	lda #$80
+	sta col80_enabled
+	rts
+
+col80_off:
+	lda #$1B
+	sta $D011
+	lda #$17
+	sta $D018
+	lda #$97
+	sta $DD00
+	lda #0
+	sta col80_enabled
 	rts
 
 new_bsout:
+	bit col80_enabled
+	bmi :+
+	jmp $f1ca
+:
 	sta DATA
 	pha
 	lda DFLTO
@@ -753,6 +777,10 @@ draw_char:
 	rts
 
 new_basin:
+	bit col80_enabled
+	bmi :+
+	jmp $f157
+:
 ; ***START*** almost identical to $F157 in KERNAL
 	lda DFLTN
 	bne @1
@@ -885,6 +913,11 @@ new_basin:
 .endmacro
 
 new_cinv:
+	bit col80_enabled
+	bmi :+
+	jmp $ea31
+:
+
 	jsr $FFEA ; increment real time clock
 .if 0
 	lda $D021
@@ -1052,4 +1085,7 @@ rvs_mask:
 color2:
 	.byte 0
 is_text:
+	.byte 0
+
+col80_enabled:
 	.byte 0

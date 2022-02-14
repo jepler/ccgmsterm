@@ -22,7 +22,7 @@ print_banner:
 	ldy #>txt_author
 	jsr outstr
 	ldx #80
-	bit is_80_columns
+	bit col80_enabled
 	bmi :+
 	ldx #40
 :	lda #$b7	; UPPER ONE QUARTER BLOCK

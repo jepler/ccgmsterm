@@ -11,7 +11,7 @@
 ;----------------------------------------------------------------------
 ; invert character at cursor position
 invert_csr_char:
-	bit is_80_columns
+	bit col80_enabled
 	bpl :+
 	jmp col80_invert
 
@@ -28,7 +28,7 @@ invert_csr_char:
 ;----------------------------------------------------------------------
 ; restore char at cursor position
 restore_csr_char:
-	bit is_80_columns
+	bit col80_enabled
 	bpl :+
 	jmp col80_restore
 
