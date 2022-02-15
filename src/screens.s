@@ -31,7 +31,6 @@ swap_screen:
 	pha
 	lda #$0b
 	sta $d011	; screen off
-	jsr setup_ram_nmi
 	lda #$2f
 	sta $00
 	lda #$35	; disable ROMs

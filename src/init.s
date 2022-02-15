@@ -46,7 +46,7 @@ start:
 .if 1
 	jsr col80_init
 .endif
-	jsr setup_ram_nmi
+	jsr setup_ram_irq_nmi
 
 	lda $0326
 	sta oldout
@@ -250,15 +250,15 @@ term80_toggle:
 :	jmp col80_on
 
 ;----------------------------------------------------------------------
-setup_ram_nmi:
+setup_ram_irq_nmi:
 	lda #<ramnmi
 	sta $fffa
 	lda #>ramnmi
 	sta $fffb
-;	lda #<ramirq
-;	sta $fffe
-;	lda #>ramirq
-;	sta $ffff
+	lda #<ramirq
+	sta $fffe
+	lda #>ramirq
+	sta $ffff
 	rts
 
 ;----------------------------------------------------------------------
