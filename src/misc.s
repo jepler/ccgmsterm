@@ -41,7 +41,9 @@ handle_f8_switch_term:
 	lda ascii_mode
 	eor #1
 	sta ascii_mode
-	jsr bell
+	beq :+
+	jsr term80_toggle
+:	jsr bell
 	jmp term_entry
 
 ;----------------------------------------------------------------------

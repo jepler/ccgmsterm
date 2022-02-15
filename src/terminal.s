@@ -14,11 +14,22 @@ term_entry_first:
 
 ; enter here to print banner again
 term_entry:
-	jsr print_banner; title screen/CCGMS!
+	bit term_80col_mode
+	bpl :+
+	jsr col80_on
+:	jsr print_banner; title screen/CCGMS!
 	jsr print_instr	; display commands f1 etc to terminal ready
 
 ; enter here to just return into terminal mode
 term_mainloop:
+	; turn on 80 col mode again (if requested)
+	bit term_80col_mode
+	bpl :+		; not in 80 col term mode
+	bit col80_enabled
+	bmi :+		; screen model already enabled
+	jsr col80_on
+:
+
 	lda supercpu
 	beq @loop1
 	cmp #2		; already printed once

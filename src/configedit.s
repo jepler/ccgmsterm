@@ -9,6 +9,8 @@
 ;----------------------------------------------------------------------
 ; change terminal params/dial
 handle_f7_config:
+	jsr col80_off
+
 	jsr disablemodem
 	lda #0
 	sta $d020

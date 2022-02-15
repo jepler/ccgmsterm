@@ -45,7 +45,6 @@ start:
 
 .if 1
 	jsr col80_init
-	jsr col80_on
 .endif
 	jsr setup_ram_nmi
 
@@ -72,21 +71,21 @@ start:
 	lda #$0e
 	sta $d418	; *almost* full volume
 
-	bit col80_enabled
-	bmi @skip
-; clear secondary screens
-	lda #<SCREENS_BASE
-	sta locat
-	lda #>SCREENS_BASE
-	sta locat+1
-	lda #>$2000
-	ldy #0
-:	sta (locat),y
-	iny
-	bne :-
-	inc locat+1
-	bne :-
-@skip:
+;	bit col80_enabled
+;	bmi @skip
+;; clear secondary screens
+;	lda #<SCREENS_BASE
+;	sta locat
+;	lda #>SCREENS_BASE
+;	sta locat+1
+;	lda #>$2000
+;	ldy #0
+;:	sta (locat),y
+;	iny
+;	bne :-
+;	inc locat+1
+;	bne :-
+;@skip:
 
 	cli
 
@@ -109,6 +108,7 @@ start:
 	lda #1
 	sta drive_present; we have a drive!
 @dsk2:
+; GOOD
 
 ; REU detection
 	lda easyflash_support
@@ -124,8 +124,10 @@ start:
 	sta buffer_ptr
 	lda newbuf+1
 	sta buffer_ptr+1
+;GOOD
 
 	jsr rsopen
+;GOOD
 	jsr ercopn
 	jmp init	; [XXX the next two functions are in the way]
 
@@ -203,7 +205,7 @@ init:
 ;----------------------------------------------------------------------
 .segment "CODE"
 ;----------------------------------------------------------------------
-is_80_columns_enabled:
+term_80col_mode:
 	.byte 0
 oldout:
 	.word 0
@@ -238,6 +240,14 @@ set_bgcolor:
 	asl
 	sta bgcolor
 	rts
+
+term80_toggle:
+	lda term_80col_mode
+	eor #$80
+	sta term_80col_mode
+	bne :+
+	jmp col80_off
+:	jmp col80_on
 
 ;----------------------------------------------------------------------
 setup_ram_nmi:

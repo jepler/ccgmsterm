@@ -199,7 +199,8 @@ col80_off:
 	sta $DD00
 	lda #0
 	sta col80_enabled
-	rts
+	lda #$93
+	jmp $ffd2
 
 new_bsout:
 	bit col80_enabled

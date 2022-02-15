@@ -142,6 +142,7 @@ upltyp:
 
 ;----------------------------------------------------------------------
 handle_f1_upload:
+	jsr col80_off
 	jsr supercpu_off
 	jsr disablexfer
 	jsr text_color_save
@@ -259,6 +260,7 @@ xfrdun:
 
 ;----------------------------------------------------------------------
 handle_f3_download:
+	jsr col80_off
 	jsr disablexfer
 	lda #0
 	sta mulcnt
