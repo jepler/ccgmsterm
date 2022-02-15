@@ -243,7 +243,7 @@ ret1	clc
 	lda rsotm
 	rts
 notmod	pla
-	jmp  (oldout)
+	jmp  oldout
 
 ;----------------------------------------------------------------------
 ; disable rs232 input

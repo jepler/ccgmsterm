@@ -178,7 +178,7 @@ new_irq:
 	stx outstat
 @1:	bcc @end
 @2:	cli
-@end:	jmp (oldirq)
+@end:	jmp oldirq
 
 ilotab:
 	.byte $95
@@ -297,7 +297,7 @@ newoutup:
 	cmp #2		;screen, and...
 	beq :+
 	pla		;if so, go back to original rom routines
-	jmp (oldout)
+	jmp oldout
 :
 	pla
 	sta rsotm
@@ -353,9 +353,9 @@ up9600_disable:
 	sta $0318
 	lda #>oldnmi
 	sta $0319
-	lda oldirq
-	sta $0314	; irq
 	lda oldirq+1
+	sta $0314	; irq
+	lda oldirq+2
 	sta $0315	; irq
 	cli
 	rts

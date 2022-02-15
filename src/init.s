@@ -49,13 +49,13 @@ start:
 	jsr setup_ram_irq_nmi
 
 	lda $0326
-	sta oldout
-	lda $0327
 	sta oldout+1
+	lda $0327
+	sta oldout+2
 	lda $0314
-	sta oldirq
-	lda $0315
 	sta oldirq+1
+	lda $0315
+	sta oldirq+2
 
 ; editor/screen setup
 	lda #1
@@ -208,18 +208,11 @@ init:
 term_80col_mode:
 	.byte 0
 oldout:
+	.byte $4c	; JMP
 	.word 0
 oldirq:
+	.byte $4c	; JMP
 	.word 0
-.assert <oldout <> $ff, error, "JMP () bug"
-.assert <oldirq <> $ff, error, "JMP () bug"
-
-;----------------------------------------------------------------------
-switch80:
-	rts
-
-switch40:
-	rts
 
 ;----------------------------------------------------------------------
 get_charset:
