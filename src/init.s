@@ -43,8 +43,11 @@ start:
 	lda #$37
 	sta $01
 
-.if 1
 	jsr col80_init
+.if 0
+	jsr col80_on
+	lda #$80
+	sta term_80col_mode
 .endif
 	jsr setup_ram_irq_nmi
 
